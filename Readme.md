@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Zarif Taktashev](https://up.htmlacademy.ru/ecmascript/11/user/378017).
-* Наставник: `Неизвестно`.
+* Наставник: [Валерий Овечкин](https://htmlacademy.ru/profile/id1432451).
 
 ---
 
