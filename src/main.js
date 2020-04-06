@@ -10,7 +10,7 @@ const createUserName = () => {
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
   );
-}
+};
 
 const createMenu = () => {
   return (
@@ -32,7 +32,7 @@ const createMenu = () => {
 
     <section class="films"></section>`
   );
-}
+};
 
 const createFilmList = () => {
   return (
@@ -42,7 +42,7 @@ const createFilmList = () => {
       </div>
     </section>`
   );
-}
+};
 
 const createFilmCard = () => {
   return (
@@ -64,13 +64,13 @@ const createFilmCard = () => {
       </form>
     </article>`
   );
-}
+};
 
 const createShowButton = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
-}
+};
 
 const footerStatistics = () => {
   return (
@@ -78,7 +78,7 @@ const footerStatistics = () => {
       <p>130 291 movies inside</p>
     </section>`
   );
-}
+};
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -95,9 +95,11 @@ render(films, createFilmList(), `beforeend`);
 
 const filmsList = films.querySelector(`.films-list`);
 const filmsContainer = films.querySelector(`.films-list__container`);
+
 for (let i = 0; i < TASK_COUNT; i++) {
   render(filmsContainer, createFilmCard(), `beforeend`);
 }
 
+render(filmsList, createShowButton(), `beforeend`);
 const footer = document.querySelector(`.footer`);
 render(footer, footerStatistics(), `beforeend`);
