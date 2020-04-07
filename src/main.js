@@ -82,7 +82,7 @@ const footerStatistics = () => {
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
-}
+};
 
 const siteMainElement = document.querySelector(`.main`);
 const header = document.querySelector(`.header`);
