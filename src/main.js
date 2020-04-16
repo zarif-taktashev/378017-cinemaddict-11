@@ -5,6 +5,7 @@ import {createFilmCard} from "./components/film-card";
 import {createShowButton} from "./components/show-button";
 import {createFooterStatistics} from "./components/footer-statistics";
 import {createFilmDetails} from "./components/film-details";
+import {createFilms} from "./mock/films.js";
 
 const TASK_COUNT = 5;
 
@@ -24,8 +25,10 @@ render(films, createFilmList());
 const filmsList = films.querySelector(`.films-list`);
 const filmsContainer = films.querySelector(`.films-list__container`);
 
+const filmsData = createFilms();
+
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(filmsContainer, createFilmCard());
+  render(filmsContainer, createFilmCard(filmsData[i]));
 }
 
 render(filmsList, createShowButton());
