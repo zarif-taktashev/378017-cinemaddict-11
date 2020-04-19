@@ -1,56 +1,46 @@
-const filmNames = [
-  `The Dance of Life`, `Sagebrush Trail`, `The Man with the Golden Arm`,
-  `Santa Claus Conquers the Martians`, `Popeye the Sailor Meets Sindbad the Sailor`
-];
+import {FILM_NAMES, GENRES, AUTHORS, POSTERS, EMOTIONS, DESCRIPTIONS, COUNTRIES} from '../data.js';
+import {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayItems, getRandomDuration} from '../utils.js';
 
-const ranges = [
-  `8.3`, `3.2`, `9.0`, `2.3`, `6.3`
-];
+const MIN_DURATION = 0;
+const MAX_DURATION = 180;
+const MAX_QUAN_COM = 0;
+const MIN_QUAN_COM = 100;
+const MIN_COM = 0;
+const MAX_COM = 5;
 
-const years = [
-  `1929`, `1933`, `1955`, `1964`, `1936`
-];
-
-const durations = [
-  `115`, `54`, `119`, `81`, `16`
-];
-
-const genres = [
-  `Musical`, `Western`, `Drama`, `Comedy`, `Cartoon`
-];
-
-const posters = [
-  `the-dance-of-life.jpg`, `sagebrush-trail.jpg`, `the-man-with-the-golden-arm.jpg`,
-  `santa-claus-conquers-the-martians.jpg`, `popeye-meets-sinbad.png`
-];
-
-const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Cras aliquet varius magna, non porta ligula feugiat eget.
-Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.
-Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.
-Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.
-Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.
-Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.
-Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-const descriptions = text.split(`.`);
-
-const commentsQuantitys = [
-  6, 58, 50, 68, 10
-];
-
-const createFilms = () => {
-  return filmNames.map((it, index) => {
+const createComments = (number) => {
+  return createArray(number)
+  .map(() => {
     return {
-      name: it,
-      range: ranges[index],
-      year: years[index],
-      duration: durations[index],
-      genre: genres[index],
-      poster: posters[index],
-      description: descriptions.slice(Math.floor(Math.random() * descriptions.length)),
-      commentsQuantity: commentsQuantitys[index]
+      author: getRandomArrayItem(AUTHORS),
+      text: getRandomArrayItem(DESCRIPTIONS),
+      emotion: getRandomArrayItem(EMOTIONS),
+      date: new Date(),
     };
   });
+};
+
+const crateFilm = () => {
+  return {
+    name: getRandomArrayItem(FILM_NAMES),
+    range: getRandomRange(),
+    date: new Date(),
+    director: getRandomArrayItem(AUTHORS),
+    duration: getRandomDuration(MIN_DURATION, MAX_DURATION),
+    genres: getArrayItems(GENRES),
+    poster: getRandomArrayItem(POSTERS),
+    description: getArrayItems(DESCRIPTIONS),
+    commentsQuantity: getRandomInt(MIN_QUAN_COM, MAX_QUAN_COM),
+    countries: getRandomArrayItem(COUNTRIES),
+    writers: getArrayItems(AUTHORS),
+    actors: getArrayItems(AUTHORS),
+    comments: createComments(getRandomInt(MIN_COM, MAX_COM)),
+  };
+};
+
+const createFilms = (number) => {
+  return createArray(number)
+    .map(crateFilm);
 };
 
 export {createFilms};
