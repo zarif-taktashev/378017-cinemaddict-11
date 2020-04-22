@@ -106,6 +106,5 @@ const DESCRIPTIONS = [
   `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
-const COUNT = 20;
 
-export {FILM_NAMES, GENRES, AUTHORS, POSTERS, EMOTIONS, DESCRIPTIONS, COUNTRIES, MONTH_NAMES, COUNT};
+export {FILM_NAMES, GENRES, AUTHORS, POSTERS, EMOTIONS, DESCRIPTIONS, COUNTRIES, MONTH_NAMES};

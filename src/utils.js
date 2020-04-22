@@ -4,23 +4,23 @@ const MIN_RANGE = 0;
 const MAX_RANGE = 10;
 const HOUR = 60;
 
-const getRandomInt = (min, max) => {
+export const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getRandomArrayItem = (array) => {
+export const getRandomArrayItem = (array) => {
   const randomIndex = getRandomInt(FIRST_ARRAY_INDEX, array.length - DEFLACTION);
   return array[randomIndex];
 };
 
-const getArrayItems = (array) => {
+export const getArrayItems = (array) => {
   return array.slice(getRandomInt(FIRST_ARRAY_INDEX, array.length - DEFLACTION));
 };
 
-const getRandomRange = () => {
+export const getRandomRange = () => {
   const even = getRandomInt(MIN_RANGE, MAX_RANGE);
 
   if (even < 10) {
@@ -30,11 +30,11 @@ const getRandomRange = () => {
   return `${even}.0`;
 };
 
-const createArray = (number) => {
+export const createArray = (number) => {
   return new Array(number).fill(``);
 };
 
-const getRandomDuration = (min, max) => {
+export const getRandomDuration = (min, max) => {
   const duration = getRandomInt(min, max);
 
   if (duration >= HOUR) {
@@ -45,4 +45,25 @@ const getRandomDuration = (min, max) => {
   return `${duration}m`;
 };
 
-export {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayItems, getRandomDuration};
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+export const render = (container, element, place = RenderPosition.BEFOREEND) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
