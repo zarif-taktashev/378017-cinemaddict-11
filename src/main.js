@@ -47,7 +47,7 @@ const renderFilm = (filmCardComponent, filmCardData) => {
   filmComments.addEventListener(`click`, onCardClick);
 
   const filmClose = filmDetails.getElement().querySelector(`.film-details__close-btn`);
-  filmClose.addEventListener(`click`, onCloseClick  );
+  filmClose.addEventListener(`click`, onCloseClick);
 
   render(filmCardComponent, filmCard.getElement());
 };
