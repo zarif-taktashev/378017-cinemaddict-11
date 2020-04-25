@@ -1,6 +1,7 @@
 import {MONTH_NAMES} from '../data.js';
+import {createElement} from "../utils.js";
 
-export const createFilmDetails = (film) => {
+const createFilmDetails = (film) => {
   const {poster} = film;
   const alt = poster.split(`.`)[0];
   const comments = film.comments;
@@ -167,3 +168,25 @@ export const createFilmDetails = (film) => {
     </section>`
   );
 };
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,6 @@
-export const createMenu = (filters) => {
+import {createElement} from "../utils.js";
+
+const createMenu = (filters) => {
   const createFilters = (filtersInf) => {
     return filtersInf.map((it) => {
       return (`
@@ -25,8 +27,30 @@ export const createMenu = (filters) => {
       <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
       <li><a href="#" class="sort__button">Sort by date</a></li>
       <li><a href="#" class="sort__button">Sort by rating</a></li>
-    </ul>
-
-    <section class="films"></section>`
+    </ul>`
   );
 };
+
+export default class Menu {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenu(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
