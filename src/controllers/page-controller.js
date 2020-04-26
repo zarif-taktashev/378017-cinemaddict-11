@@ -54,7 +54,7 @@ const getSortedTasks = (films, sortType, from, to) => {
   return sortedTasks.slice(from, to);
 };
 
-export default class FilmBoardController {
+export default class PageController {
   constructor(container) {
     this._container = container;
 
