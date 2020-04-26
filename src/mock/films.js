@@ -1,5 +1,5 @@
 import {FILM_NAMES, GENRES, AUTHORS, POSTERS, EMOTIONS, DESCRIPTIONS, COUNTRIES} from '../data.js';
-import {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayItems, getRandomDuration} from '../utils.js';
+import {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayItems, getRandomDuration} from '../utils/common';
 
 const MIN_DURATION = 0;
 const MAX_DURATION = 180;
