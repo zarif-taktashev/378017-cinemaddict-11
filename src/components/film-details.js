@@ -1,5 +1,8 @@
-import {MONTH_NAMES} from '../data.js';
-import AbstractComponent from "./abstract-component.js";
+import {MONTH_NAMES} from '../data';
+import AbstractSmartComponent from "./abstract-smart-component-component";
+
+const IMG_HEIGHT = 55;
+const IMG_WIDTH = 55;
 
 const createFilmDetails = (film) => {
   const {poster} = film;
@@ -31,7 +34,7 @@ const createFilmDetails = (film) => {
       return (`
         <li class="film-details__comment">
           <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
+            <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">
           </span>
           <div>
             <p class="film-details__comment-text">${comment.text}</p>
@@ -169,10 +172,47 @@ const createFilmDetails = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+
+    this._closeDetailClick = null;
+    this._watchListClic = null;
+    this._historyClic = null;
+    this._favoriteClic = null;
+    this._setEmojiClick();
+  }
+
+  _setEmojiClick() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__emoji-list`)
+    .addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const value = evt.target.value;
+      evt.target.checked = true;
+      var img = document.createElement('img');
+      img.src = `./images/emoji/${value}.png`;
+      img.alt = value;
+      img.width = IMG_WIDTH;
+      img.height = IMG_HEIGHT;
+      document.getElementById('.film-details__add-emoji-label"').appendChild(img);
+
+      this.rerender();
+    });
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setCloseDetailClick(this._closeDetailClick);
+    this.setWatchListClickHandler(this._watchListClic);
+    this.setHistoryClickHandler(this._historyClic);
+    this.setFavoriteClickHandler(this._favoriteClic);
+    this._setEmojiClick();
   }
 
   getTemplate() {
@@ -182,5 +222,29 @@ export default class FilmDetails extends AbstractComponent {
   setCloseDetailClick(handler) {
     const filmClose = this.getElement().querySelector(`.film-details__close-btn`);
     filmClose.addEventListener(`click`, handler);
+
+    this._closeDetailClick = handler;
+  }
+
+
+  setWatchListClickHandler(handler){
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+
+    this._watchListClic = handler;
+  }
+
+  setHistoryClickHandler(handler){
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+
+    this._historyClic = handler;
+  }
+
+  setFavoriteClickHandler(handler){
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+
+    this._favoriteClic = handler;
   }
 }
