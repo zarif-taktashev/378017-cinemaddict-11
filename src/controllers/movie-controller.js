@@ -19,7 +19,7 @@ export default class MovieController {
   }
 
   setDefaultView() {
-    if (this._mode !== Mode.OPEN) {
+    if (this._mode !== Mode.CLOSE) {
       this._onCloseDetailClick();
     }
   }
@@ -31,9 +31,18 @@ export default class MovieController {
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmDetailsComponent = new FilmDetailsComponent(film);
 
-    this._filmCardComponent.setPosterClickHandler(this._onCardClick);
-    this._filmCardComponent.setTitleClickHandler(this._onCardClick);
-    this._filmCardComponent.setCommentsClickHandler(this._onCardClick);
+    this._filmCardComponent.setPosterClickHandler((evt) => {
+      evt.preventDefault();
+      this._onCardClick();
+    });
+    this._filmCardComponent.setTitleClickHandler((evt) => {
+      evt.preventDefault();
+      this._onCardClick();
+    });
+    this._filmCardComponent.setCommentsClickHandler((evt) => {
+      evt.preventDefault();
+      this._onCardClick();
+    });
 
     this._filmCardComponent.setWatchListClickHandler(() => {
       this._onDataChange(film, Object.assign({}, film, {
@@ -53,7 +62,10 @@ export default class MovieController {
       }));
     });
 
-    this._filmDetailsComponent.setCloseDetailClick(this._onCloseDetailClick);
+    this._filmDetailsComponent.setCloseDetailClick(() => {
+
+      this._onCloseDetailClick();
+    });
 
     this._filmDetailsComponent.setWatchListClickHandler(() => {
       this._onDataChange(film, Object.assign({}, film, {
@@ -73,7 +85,7 @@ export default class MovieController {
       }));
     });
 
-    if (oldfilmCardComponent && oldTaskComponent) {
+    if (oldfilmCardComponent && oldfilmDetailsComponent) {
       replace(this._filmCardComponent, oldfilmCardComponent);
       replace(this._filmDetailsComponent, oldfilmDetailsComponent);
     } else {
@@ -82,15 +94,13 @@ export default class MovieController {
 
   }
 
-  _onCardClick(evt) {
-    evt.preventDefault();
+  _onCardClick() {
     this._onViewChange();
     this._mode = Mode.OPEN;
     render(document.body, this._filmDetailsComponent);
   }
 
-  _onCloseDetailClick(evt) {
-    evt.preventDefault();
+  _onCloseDetailClick() {
     this._mode = Mode.CLOSE;
     remove(this._filmDetailsComponent);
   }

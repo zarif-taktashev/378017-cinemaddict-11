@@ -16,6 +16,6 @@ export default class FilmList extends AbstractComponent {
   }
 
   getFilmListContainer() {
-    return this._element.querySelector(`.films-list__container`);
+    return this.getElement().querySelector(`.films-list__container`);
   }
 }

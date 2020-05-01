@@ -82,20 +82,20 @@ export default class PageController {
     this._showedFilmsControllers[index].render(this._films[index]);
   }
 
-  _renderShowButton = () => {
+  _renderShowButton() {
     if (this._filmCount >= this._films.length) {
       return;
     }
 
-    render(this._filmList.getElement(), showButton);
+    render(this._filmList.getElement(), this._showButton);
 
-    showButton.setClickHandler(() => {
+    this._showButton.setClickHandler(() => {
       const prevTasksCount = this._filmCount;
       this._filmCount = prevTasksCount + SHOWING_FILM_COUNT_BY_BUTTON;
       const newFilms = rendFilms(this._filmsListContainer, this._films.slice(prevTasksCount, this._filmCount), this._onDataChange, this._onViewChange);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
       if (this._filmCount >= this._films.length) {
-        remove(showButton);
+        remove(this._showButton);
       }
     });
   }
