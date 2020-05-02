@@ -21,6 +21,7 @@ const footer = document.querySelector(`.footer`);
 render(footer, new FooterComponent(FILMS_COUNT));
 
 const film = new FilmsComponent();
-const filmBoard = new PageController(film);
 render(siteMainElement, film);
+
+const filmBoard = new PageController(film);
 filmBoard.render(filmsData);

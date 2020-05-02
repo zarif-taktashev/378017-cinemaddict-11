@@ -1,7 +1,10 @@
-import {MONTH_NAMES} from '../data.js';
-import AbstractComponent from "./abstract-component.js";
+import {MONTH_NAMES} from '../data';
+import AbstractSmartComponent from "./abstract-smart-component";
 
-const createFilmDetails = (film) => {
+const IMG_HEIGHT = 55;
+const IMG_WIDTH = 55;
+
+const createFilmDetails = (film, emoji) => {
   const {poster} = film;
   const alt = poster.split(`.`)[0];
   const comments = film.comments;
@@ -31,7 +34,7 @@ const createFilmDetails = (film) => {
       return (`
         <li class="film-details__comment">
           <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
+            <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">
           </span>
           <div>
             <p class="film-details__comment-text">${comment.text}</p>
@@ -134,7 +137,9 @@ const createFilmDetails = (film) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+                ${emoji !== null ? emoji : ``}
+              </div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -169,18 +174,77 @@ const createFilmDetails = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+
+    this._closeDetailClick = null;
+    this._watchListClic = null;
+    this._historyClic = null;
+    this._favoriteClic = null;
+    this._emoji = null;
+    this._setEmojiClick();
+  }
+
+  _setEmojiClick() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__emoji-list`)
+    .addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const src = evt.target.attributes.src.value;
+      const alt = evt.target.alt;
+      evt.target.checked = true;
+      const img = `<img src=${src} alt=${alt} width=${IMG_WIDTH} height=${IMG_HEIGHT}>`;
+      this._emoji = img;
+
+      this.rerender();
+    });
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setCloseDetailClick(this._closeDetailClick);
+    this.setWatchListClickHandler(this._watchListClic);
+    this.setHistoryClickHandler(this._historyClic);
+    this.setFavoriteClickHandler(this._favoriteClic);
+    this._setEmojiClick();
   }
 
   getTemplate() {
-    return createFilmDetails(this._film);
+    return createFilmDetails(this._film, this._emoji);
   }
 
   setCloseDetailClick(handler) {
     const filmClose = this.getElement().querySelector(`.film-details__close-btn`);
     filmClose.addEventListener(`click`, handler);
+
+    this._closeDetailClick = handler;
+  }
+
+
+  setWatchListClickHandler(handler) {
+    const watchlist = this.getElement().querySelector(`.film-details__control-label--watchlist`);
+    watchlist.addEventListener(`click`, handler);
+
+    this._watchListClic = handler;
+  }
+
+  setHistoryClickHandler(handler) {
+    const watched = this.getElement().querySelector(`.film-details__control-label--watched`);
+    watched.addEventListener(`click`, handler);
+
+    this._historyClic = handler;
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+
+    this._favoriteClic = handler;
   }
 }

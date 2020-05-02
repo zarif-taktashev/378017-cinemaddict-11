@@ -34,6 +34,9 @@ const crateFilm = () => {
     countries: getRandomArrayItem(COUNTRIES),
     writers: getArrayItems(AUTHORS),
     actors: getArrayItems(AUTHORS),
+    isHistory: Math.random() > 0.5,
+    isWatchlist: Math.random() > 0.5,
+    isFavorite: Math.random() > 0.5,
     comments: createComments(getRandomInt(MIN_COM, MAX_COM)),
   };
 };
