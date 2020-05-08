@@ -62,8 +62,8 @@ export default class MovieController {
       }));
     });
 
-    this._filmDetailsComponent.setCloseDetailClick(() => {
-
+    this._filmDetailsComponent.setCloseDetailClick((evt) => {
+      evt.preventDefault();
       this._onCloseDetailClick();
     });
 
@@ -102,6 +102,7 @@ export default class MovieController {
 
   _onCloseDetailClick() {
     this._mode = Mode.CLOSE;
+    this._filmDetailsComponent.reset();
     remove(this._filmDetailsComponent);
   }
 }

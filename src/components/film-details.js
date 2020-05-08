@@ -4,8 +4,41 @@ import AbstractSmartComponent from "./abstract-smart-component";
 const IMG_HEIGHT = 55;
 const IMG_WIDTH = 55;
 
-const createFilmDetails = (film, emoji) => {
+const createGenresList = (genres) => {
+  return genres.map((genre) => {
+    return `<span class="film-details__genre">${genre}</span>`;
+  }).join(` `);
+};
+
+const createComment = (commentsInf) => {
+  return commentsInf.map((comment) => {
+    const year = comment.date.getFullYear();
+    const month = comment.date.getUTCMonth() + 1;
+    const day = comment.date.getDate();
+    const hour = comment.date.getHours() + 1;
+    const minutes = comment.date.getMinutes() + 1;
+
+    return (`
+      <li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${comment.text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${comment.author}</span>
+            <span class="film-details__comment-day">${year}/${month}/${day} ${hour}:${minutes}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>
+    `);
+  }).join(`\n`);
+};
+
+const createFilmDetails = (film, options = {}) => {
   const {poster} = film;
+  const {emoji, emojiId} = options;
   const alt = poster.split(`.`)[0];
   const comments = film.comments;
   const commentsQuantity = film.comments.length;
@@ -16,38 +49,6 @@ const createFilmDetails = (film, emoji) => {
   const filmMonth = film.date.getUTCMonth();
   const fiilDay = film.date.getDate();
   const fiilDate = `${fiilDay} ${MONTH_NAMES[filmMonth]} ${filmYear}`;
-
-  const createGenresList = (genres) => {
-    return genres.map((genre) => {
-      return `<span class="film-details__genre">${genre}</span>`;
-    }).join(` `);
-  };
-
-  const createComment = (commentsInf) => {
-    return commentsInf.map((comment) => {
-      const year = comment.date.getFullYear();
-      const month = comment.date.getUTCMonth() + 1;
-      const day = comment.date.getDate();
-      const hour = comment.date.getHours() + 1;
-      const minutes = comment.date.getMinutes() + 1;
-
-      return (`
-        <li class="film-details__comment">
-          <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">
-          </span>
-          <div>
-            <p class="film-details__comment-text">${comment.text}</p>
-            <p class="film-details__comment-info">
-              <span class="film-details__comment-author">${comment.author}</span>
-              <span class="film-details__comment-day">${year}/${month}/${day} ${hour}:${minutes}</span>
-              <button class="film-details__comment-delete">Delete</button>
-            </p>
-          </div>
-        </li>
-      `);
-    }).join(`\n`);
-  };
 
   const commentsMarkup = createComment(comments);
   const genresMarkup = createGenresList(film.genres);
@@ -146,22 +147,22 @@ const createFilmDetails = (film, emoji) => {
               </label>
 
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+                <input ${emojiId === `emoji-smile` ? `checked` : ``} class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+                <input ${emojiId === `emoji-sleeping` ? `checked` : ``} class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+                <input ${emojiId === `emoji-puke` ? `checked` : ``} class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+                <input ${emojiId === `emoji-angry` ? `checked` : ``} class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
@@ -184,6 +185,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._historyClic = null;
     this._favoriteClic = null;
     this._emoji = null;
+    this._emojiId = null;
     this._setEmojiClick();
   }
 
@@ -195,9 +197,10 @@ export default class FilmDetails extends AbstractSmartComponent {
       evt.preventDefault();
       const src = evt.target.attributes.src.value;
       const alt = evt.target.alt;
-      evt.target.checked = true;
+      const emojiId = evt.target.parentNode.attributes.for.value;
       const img = `<img src=${src} alt=${alt} width=${IMG_WIDTH} height=${IMG_HEIGHT}>`;
       this._emoji = img;
+      this._emojiId = emojiId;
 
       this.rerender();
     });
@@ -205,6 +208,13 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  reset() {
+    this._emoji = null;
+    this._emojiId = null;
+
+    this.rerender();
   }
 
   recoveryListeners() {
@@ -216,7 +226,10 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmDetails(this._film, this._emoji);
+    return createFilmDetails(this._film, {
+      emoji: this._emoji,
+      emojiId: this._emojiId
+    });
   }
 
   setCloseDetailClick(handler) {
