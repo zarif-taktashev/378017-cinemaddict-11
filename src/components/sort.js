@@ -6,12 +6,12 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
-const createSort = () => {
+const createSort = (currenSortType) => {
   return (
     `<ul class="sort">
-      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by date</a></li>
-      <li><a href="#" data-sort-type="${SortType.RATE}" class="sort__button">Sort by rating</a></li>
+      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button ${currenSortType === `default` ? `sort__button--active` : ``}">Sort by default</a></li>
+      <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button ${currenSortType === `date-up` ? `sort__button--active` : ``}">Sort by date</a></li>
+      <li><a href="#" data-sort-type="${SortType.RATE}" class="sort__button ${currenSortType === `rate` ? `sort__button--active` : ``}">Sort by rating</a></li>
     </ul>`
   );
 };
@@ -24,7 +24,7 @@ export default class Sort extends AbstractComponent {
   }
 
   getTemplate() {
-    return createSort();
+    return createSort(this._currenSortType);
   }
 
   getSortType() {
@@ -38,6 +38,7 @@ export default class Sort extends AbstractComponent {
       if (evt.target.tagName !== `A`) {
         return;
       }
+
       const sortType = evt.target.dataset.sortType;
 
       if (this._currenSortType === sortType) {

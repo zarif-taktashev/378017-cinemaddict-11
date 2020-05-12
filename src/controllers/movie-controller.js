@@ -2,10 +2,12 @@ import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import {render, replace, remove} from "../utils/render.js";
 
-const Mode = {
+export const Mode = {
   CLOSE: `close`,
   OPEN: `open`,
 };
+
+export const EmptyComment = {};
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -45,19 +47,19 @@ export default class MovieController {
     });
 
     this._filmCardComponent.setWatchListClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isWatchlist: !film.isWatchlist,
       }));
     });
 
     this._filmCardComponent.setHistoryClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isHistory: !film.isHistory,
       }));
     });
 
     this._filmCardComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isFavorite: !film.isFavorite,
       }));
     });
@@ -68,19 +70,19 @@ export default class MovieController {
     });
 
     this._filmDetailsComponent.setWatchListClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isWatchlist: !film.isWatchlist,
       }));
     });
 
     this._filmDetailsComponent.setHistoryClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isHistory: !film.isHistory,
       }));
     });
 
     this._filmDetailsComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(film, Object.assign({}, film, {
+      this._onDataChange(this, film, Object.assign({}, film, {
         isFavorite: !film.isFavorite,
       }));
     });
@@ -92,6 +94,11 @@ export default class MovieController {
       render(this._container, this._filmCardComponent);
     }
 
+  }
+
+  destroy() {
+    remove(this._filmDetailsComponent);
+    remove(this._filmCardComponent);
   }
 
   _onCardClick() {
