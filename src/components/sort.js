@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 export const SortType = {
   RATE: `rate`,
@@ -16,11 +16,19 @@ const createSort = (currenSortType) => {
   );
 };
 
-export default class Sort extends AbstractComponent {
+export default class Sort extends AbstractSmartComponent {
   constructor() {
     super();
 
     this._currenSortType = SortType.DEFAULT;
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._settedSortType);
   }
 
   getTemplate() {
@@ -47,6 +55,7 @@ export default class Sort extends AbstractComponent {
 
       this._currenSortType = sortType;
 
+      this._settedSortType = handler;
       handler(this._currenSortType);
     });
   }

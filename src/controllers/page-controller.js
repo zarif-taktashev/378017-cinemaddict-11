@@ -93,35 +93,10 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
+    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
 
-    if (oldData === EmptyComment) {
-      this._creatingFilmComment = null;
-      if (newData === null) {
-        movieController.destroy();
-        this._updateFilms(this._filmCount);
-      } else {
-        this._tasksModel.addTask(newData);
-        movieController.render(newData, MovieControllerMode.DEFAULT);
-
-        if (this._showingTasksCount % SHOWING_FILM_COUNT_BY_BUTTON === 0) {
-          const destroyedTask = this._showedTaskControllers.pop();
-          destroyedTask.destroy();
-        }
-
-        this._showedTaskControllers = [].concat(movieController, this._showedTaskControllers);
-        this._showingTasksCount = this._showedTaskControllers.length;
-
-        this._renderShowButton();
-      }
-    } else if (newData === null) {
-      this._filmsModel.removeComment(oldData.id);
-      this._updateFilms(this._filmCount);
-    } else {
-      const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
-
-      if (isSuccess) {
-        movieController.render(newData);
-      }
+    if (isSuccess) {
+      movieController.render(newData);
     }
   }
 
@@ -155,6 +130,7 @@ export default class PageController {
 
     const sortedFilms = getSortedTasks(this._filmsModel.getFilms(), sortType, 0, this._filmCount);
 
+    this._sortComponent.rerender();
     this._removeFilms();
     this._renderFilms(sortedFilms);
     this._renderShowButton();
