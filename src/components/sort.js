@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 export const SortType = {
   RATE: `rate`,
@@ -6,25 +6,33 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
-const createSort = () => {
+const createSort = (currenSortType) => {
   return (
     `<ul class="sort">
-      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button">Sort by date</a></li>
-      <li><a href="#" data-sort-type="${SortType.RATE}" class="sort__button">Sort by rating</a></li>
+      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button ${currenSortType === `default` ? `sort__button--active` : ``}">Sort by default</a></li>
+      <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button ${currenSortType === `date-up` ? `sort__button--active` : ``}">Sort by date</a></li>
+      <li><a href="#" data-sort-type="${SortType.RATE}" class="sort__button ${currenSortType === `rate` ? `sort__button--active` : ``}">Sort by rating</a></li>
     </ul>`
   );
 };
 
-export default class Sort extends AbstractComponent {
+export default class Sort extends AbstractSmartComponent {
   constructor() {
     super();
 
     this._currenSortType = SortType.DEFAULT;
   }
 
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._settedSortType);
+  }
+
   getTemplate() {
-    return createSort();
+    return createSort(this._currenSortType);
   }
 
   getSortType() {
@@ -38,6 +46,7 @@ export default class Sort extends AbstractComponent {
       if (evt.target.tagName !== `A`) {
         return;
       }
+
       const sortType = evt.target.dataset.sortType;
 
       if (this._currenSortType === sortType) {
@@ -46,6 +55,7 @@ export default class Sort extends AbstractComponent {
 
       this._currenSortType = sortType;
 
+      this._settedSortType = handler;
       handler(this._currenSortType);
     });
   }

@@ -3,8 +3,6 @@ import {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayI
 
 const MIN_DURATION = 0;
 const MAX_DURATION = 180;
-const MAX_QUAN_COM = 0;
-const MIN_QUAN_COM = 100;
 const MIN_COM = 0;
 const MAX_COM = 5;
 
@@ -22,15 +20,15 @@ const createComments = (number) => {
 
 const crateFilm = () => {
   return {
+    id: String(new Date() + Math.random()),
     name: getRandomArrayItem(FILM_NAMES),
     range: getRandomRange(),
     date: new Date(),
     director: getRandomArrayItem(AUTHORS),
-    duration: getRandomDuration(MIN_DURATION, MAX_DURATION),
+    duration: getRandomDuration(getRandomInt(MIN_DURATION, MAX_DURATION)),
     genres: getArrayItems(GENRES),
     poster: getRandomArrayItem(POSTERS),
     description: getArrayItems(DESCRIPTIONS),
-    commentsQuantity: getRandomInt(MIN_QUAN_COM, MAX_QUAN_COM),
     countries: getRandomArrayItem(COUNTRIES),
     writers: getArrayItems(AUTHORS),
     actors: getArrayItems(AUTHORS),
