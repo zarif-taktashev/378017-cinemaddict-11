@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from '../data';
-import AbstractSmartComponent from "./abstract-smart-component";
+import AbstractComponent from "./abstract-component";
 
 const createGenresList = (genres) => {
   return genres.map((genre) => {
@@ -12,7 +12,7 @@ const createFilmDetails = (film) => {
   const alt = poster.split(`.`)[0];
   const writers = film.writers.join(`, `);
   const actors = film.actors.join(`, `);
-  const description = film.description.join(` `);
+  const description = film.description;
   const filmYear = film.date.getFullYear();
   const filmMonth = film.date.getUTCMonth();
   const fiilDay = film.date.getDate();
@@ -29,7 +29,7 @@ const createFilmDetails = (film) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="${alt}">
+              <img class="film-details__poster-img" src="./${film.poster}" alt="${alt}">
 
               <p class="film-details__age">18+</p>
             </div>
@@ -83,37 +83,21 @@ const createFilmDetails = (film) => {
               </p>
             </div>
           </div>
-
-          <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-            <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-            <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-            <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
-          </section>
         </div>
 
         <div class="form-details__bottom-container">
-
         </div>
       </form>
     </section>`
   );
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
-
+    this.closeHandler = null;
     this.setCloseDetailClick(this.closeHandler);
-  }
-
-  rerender() {
-    super.rerender();
   }
 
   getTemplate() {
@@ -127,19 +111,19 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.closeHandler = handler;
   }
 
+  getData() {
+    const text = this.getElement().querySelector(`.film-details__comment-input`);
+    const emoji = this.getElement().querySelector(`input[name="comment-emoji"]:checked`);
 
-  setWatchListClickHandler(handler) {
-    const watchlist = this.getElement().querySelector(`.film-details__control-label--watchlist`);
-    watchlist.addEventListener(`click`, handler);
+    return {text, emoji};
   }
 
-  setHistoryClickHandler(handler) {
-    const watched = this.getElement().querySelector(`.film-details__control-label--watched`);
-    watched.addEventListener(`click`, handler);
+  setFormSumbmitHandler(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    form.addEventListener(`keydown`, handler);
   }
 
-  setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, handler);
+  setEsckeydown(handler) {
+    document.addEventListener(`keydown`, handler);
   }
 }
