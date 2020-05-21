@@ -9,9 +9,9 @@ const getFilterNameById = (id) => {
 const createFilters = (filtersInf) => {
   return filtersInf.map((it) => {
     return (`
-      <a href="#filter__${it.name}" id="filter__${it.name}" class="main-navigation__item">
+      <a href="#filter__${it.name}" id="filter__${it.name}" class="main-navigation__item ${it.checked ? `main-navigation__item--active` : ``}">
         ${it.name}
-        ${it.count <= 10 || it.name !== `All` ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
+        ${it.count <= 5 && it.name !== `All` ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
       </a>
     `);
   }).join(`\n`);

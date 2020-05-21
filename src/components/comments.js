@@ -1,8 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {createElement} from "../utils/render";
+import {encode} from "he";
 
 const IMG_HEIGHT = 55;
 const IMG_WIDTH = 55;
+const IMG_NODE = `IMG`;
 
 const createCommentList = (commentsInf) => {
   return commentsInf.map((comment) => {
@@ -11,18 +12,19 @@ const createCommentList = (commentsInf) => {
     const day = comment.date.getDate();
     const hour = comment.date.getHours() + 1;
     const minutes = comment.date.getMinutes() + 1;
+    const text = encode(comment.text);
 
     return (`
       <li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">
+        ${comment.emotion ? `<img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">` : ``}
         </span>
         <div>
-          <p class="film-details__comment-text">${comment.text}</p>
+          <p class="film-details__comment-text">${text}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.author}</span>
             <span class="film-details__comment-day">${year}/${month}/${day} ${hour}:${minutes}</span>
-            <button class="film-details__comment-delete">Delete</button>
+            <button data-id="${comment.id}" class="film-details__comment-delete">Delete</button>
           </p>
         </div>
       </li>
@@ -31,7 +33,7 @@ const createCommentList = (commentsInf) => {
 };
 
 const createComments = (comments, options = {}) => {
-  const {emoji, emojiId} = options;
+  const {emoji, emojiId, commentText} = options;
   const commentsQuantity = comments.length;
 
   const commentsMarkup = createCommentList(comments);
@@ -50,7 +52,7 @@ const createComments = (comments, options = {}) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText ? commentText : ``}</textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -86,15 +88,8 @@ export default class Commets extends AbstractSmartComponent {
 
     this._emoji = null;
     this._emojiId = null;
+    this._commentText = null;
     this._setEmojiClick();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   rerender() {
@@ -104,6 +99,7 @@ export default class Commets extends AbstractSmartComponent {
   reset() {
     this._emoji = null;
     this._emojiId = null;
+    this._commentText = null;
 
     this.rerender();
   }
@@ -115,7 +111,8 @@ export default class Commets extends AbstractSmartComponent {
   getTemplate() {
     return createComments(this._comments, {
       emoji: this._emoji,
-      emojiId: this._emojiId
+      emojiId: this._emojiId,
+      commentText: this._commentText,
     });
   }
 
@@ -124,14 +121,24 @@ export default class Commets extends AbstractSmartComponent {
     element.querySelector(`.film-details__emoji-list`)
     .addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      const src = evt.target.attributes.src.value;
-      const alt = evt.target.alt;
-      const emojiId = evt.target.parentNode.attributes.for.value;
-      const img = `<img src=${src} alt=${alt} width=${IMG_WIDTH} height=${IMG_HEIGHT}>`;
-      this._emoji = img;
-      this._emojiId = emojiId;
 
-      this.rerender();
+      if (evt.target.nodeName === IMG_NODE) {
+        const src = evt.target.attributes.src.value;
+        const alt = evt.target.alt;
+        const emojiId = evt.target.parentNode.attributes.for.value;
+        this._commentText = element.querySelector(`.film-details__comment-input`).value;
+        const img = `<img src=${src} alt=${alt} width=${IMG_WIDTH} height=${IMG_HEIGHT}>`;
+        this._emoji = img;
+        this._emojiId = emojiId;
+
+        this.rerender();
+      }
     });
+  }
+
+  setDeleteComment(handler) {
+    const element = this.getElement();
+    element.querySelector(`.film-details__comments-list`)
+    .addEventListener(`click`, handler);
   }
 }

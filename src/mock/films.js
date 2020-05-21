@@ -3,13 +3,12 @@ import {getRandomInt, getRandomArrayItem, getRandomRange, createArray, getArrayI
 
 const MIN_DURATION = 0;
 const MAX_DURATION = 180;
-const MIN_COM = 0;
-const MAX_COM = 5;
 
 const createComments = (number) => {
   return createArray(number)
   .map(() => {
     return {
+      id: String(new Date() + Math.random()),
       author: getRandomArrayItem(AUTHORS),
       text: getRandomArrayItem(DESCRIPTIONS),
       emotion: getRandomArrayItem(EMOTIONS),
@@ -17,6 +16,8 @@ const createComments = (number) => {
     };
   });
 };
+
+export const comments = createComments(100);
 
 const crateFilm = () => {
   return {
@@ -35,13 +36,11 @@ const crateFilm = () => {
     isHistory: Math.random() > 0.5,
     isWatchlist: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    comments: createComments(getRandomInt(MIN_COM, MAX_COM)),
+    comments: getArrayItems(comments, 5).map((item) => item.id),
   };
 };
 
-const createFilms = (number) => {
+export const createFilms = (number) => {
   return createArray(number)
     .map(crateFilm);
 };
-
-export {createFilms};
