@@ -16,8 +16,10 @@ export const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-export const getArrayItems = (array) => {
-  return array.slice(getRandomInt(FIRST_ARRAY_INDEX, array.length - DEFLACTION));
+export const getArrayItems = (array, val) => {
+  const randomInt = getRandomInt(FIRST_ARRAY_INDEX, array.length - DEFLACTION);
+  const lenghtArr = val ? randomInt + getRandomInt(FIRST_ARRAY_INDEX, val) : array.length;
+  return array.slice(randomInt, lenghtArr);
 };
 
 export const getRandomRange = () => {

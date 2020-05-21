@@ -1,5 +1,5 @@
 import MenuComponent from "../components/menu";
-import {render, replace} from "../utils/render";
+import {render, replace, remove} from "../utils/render";
 import {getTasksByFilter, FilterType} from "../utils/filter.js";
 
 export default class FilterController {
@@ -42,9 +42,14 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._filmsModel.setFilter(filterType);
     this._activeFilterType = filterType;
+    this._onDataChange();
   }
 
   _onDataChange() {
     this.render();
+  }
+
+  destroy() {
+    remove(this._filterComponent);
   }
 }

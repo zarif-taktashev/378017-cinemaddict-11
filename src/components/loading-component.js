@@ -2,11 +2,11 @@ import AbstractComponent from "./abstract-component.js";
 
 const createFilm = () => {
   return (
-    `<section class="films"></section>`
+    `<h2 class="films-list__title">Loading...</h2>`
   );
 };
 
-export default class Films extends AbstractComponent {
+export default class Loading extends AbstractComponent {
   getTemplate() {
     return createFilm();
   }

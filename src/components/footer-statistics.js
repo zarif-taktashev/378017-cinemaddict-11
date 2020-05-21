@@ -3,7 +3,7 @@ import AbstractComponent from "./abstract-component.js";
 const createFooterStatistics = (count) => {
   return (
     `<section class="footer__statistics">
-      <p>${count} movies inside</p>
+      <p>${count ? count : `0`} movies inside</p>
     </section>`
   );
 };
