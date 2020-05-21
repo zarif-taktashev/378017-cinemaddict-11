@@ -23,8 +23,6 @@ const api = new API(END_POINT, AUTHORIZATION);
 
 const filmsData = new MoviesModel();
 
-//init
-
 const filters = new FilterController(siteMainElement, filmsData);
 const film = new FilmsComponent();
 const sort = new SortComponent();
