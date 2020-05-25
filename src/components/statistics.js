@@ -5,7 +5,6 @@ import {getClientRate} from "../utils/filter";
 
 const BAR_HEIGHT = 50;
 const HOUR = 60;
-const NO_DATA = `NO DATA`;
 
 const TIME_GAPS = {
   "today": {
@@ -69,7 +68,7 @@ const getGenresRate = (films) => {
 const getTopGenre = (films) => {
   const genres = getGenresRate(films);
 
-  return Object.keys(genres).length !== 0 ? Object.keys(genres).reduce((a, b) => genres[a] > genres[b] ? a : b) : NO_DATA;
+  return Object.keys(genres).length !== 0 ? Object.keys(genres).reduce((a, b) => genres[a] > genres[b] ? a : b) : ``;
 };
 
 const renderChart = (chart, films, dateFrom, dateTo) => {

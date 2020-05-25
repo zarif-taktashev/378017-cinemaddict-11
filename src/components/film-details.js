@@ -95,7 +95,7 @@ const createFilmDetails = (film) => {
                   <td class="film-details__cell">${film.countries}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genresMarkup.length > 1 ? `Genres` : `Genre`}</td>
+                  <td class="film-details__term">${film.genres.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${genresMarkup}
                 </tr>

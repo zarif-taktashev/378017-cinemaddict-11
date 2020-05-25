@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-import {getClientRate} from "./utils/filter";
+import {getClientRate} from "../utils/filter";
 
 const createUserName = (count) => {
   return (
