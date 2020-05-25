@@ -5,6 +5,25 @@ export const FilterType = {
   HISTORY: `History`
 };
 
+const RATING = {
+  MOVIE_BUFF: 21,
+  FAN: 20,
+  NOVICE: 10,
+  START: 1
+};
+
+export const getClientRate = (film) => {
+  if (film >= RATING.MOVIE_BUFF) {
+    return `Movie Buff`;
+  } else if (film <= RATING.FAN && film >= RATING.NOVICE) {
+    return `fan`;
+  } else if (film >= RATING.START && film <= RATING.NOVICE) {
+    return `novice`;
+  } else {
+    return ``;
+  }
+};
+
 export const getIsWatchlist = (films) => {
   return films.filter((film) => film.isWatchlist);
 };

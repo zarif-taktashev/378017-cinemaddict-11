@@ -1,14 +1,21 @@
-import {MONTH_NAMES} from '../data';
 import AbstractComponent from "./abstract-component";
 
-const parseFormData = (text, emoji) => {
-  return {
-    id: String(new Date() + Math.random()),
-    text: text.value,
-    emotion: emoji !== null ? emoji.value : ``,
-    date: new Date()
-  };
-};
+const HOUR = 60;
+
+const MONTH_NAMES = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`,
+];
 
 const createGenresList = (genres) => {
   return genres.map((genre) => {
@@ -29,6 +36,13 @@ const createFilmDetails = (film) => {
 
   const genresMarkup = createGenresList(film.genres);
 
+  const rangeVal = film.range.toString().split(`.`)[1] === undefined ? film.range + `.` + `0` : film.range;
+  const hours = Math.floor(film.duration / HOUR) ? Math.floor(film.duration / HOUR) + `h` : ``;
+  const minutes = film.duration % HOUR !== 0 ? film.duration % HOUR + `m` : ``;
+  const time = hours + ` ` + minutes;
+
+  const ageRate = film.ageRate ? film.ageRate + `+` : ``;
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -40,18 +54,18 @@ const createFilmDetails = (film) => {
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="./${film.poster}" alt="${alt}">
 
-              <p class="film-details__age">18+</p>
+              <p class="film-details__age">${ageRate}</p>
             </div>
 
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${film.name}</h3>
-                  <p class="film-details__title-original">Original: ${film.name}</p>
+                  <p class="film-details__title-original">Original: ${film.alternativeName}</p>
                 </div>
 
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${film.range}</p>
+                  <p class="film-details__total-rating">${rangeVal}</p>
                 </div>
               </div>
 
@@ -74,14 +88,14 @@ const createFilmDetails = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${film.duration}</td>
+                  <td class="film-details__cell">${time}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
                   <td class="film-details__cell">${film.countries}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genresMarkup.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${genresMarkup}
                 </tr>
@@ -124,7 +138,7 @@ export default class FilmDetails extends AbstractComponent {
     const text = this.getElement().querySelector(`.film-details__comment-input`);
     const emoji = this.getElement().querySelector(`input[name="comment-emoji"]:checked`);
 
-    return parseFormData(text, emoji);
+    return {text, emoji};
   }
 
   setFormSumbmitHandler(handler) {

@@ -16,7 +16,7 @@ const createControls = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class DetailsControl extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;

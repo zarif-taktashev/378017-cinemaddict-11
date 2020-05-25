@@ -3,8 +3,25 @@ import FilmDetailsComponent from "../components/film-details";
 import CommentsComponent from "../components/comments";
 import ControlsComponent from "../components/details-controls";
 import MoviesModel from "../models/movies";
-import CommentsModel from "../models/comments";
 import {render, replace, remove} from "../utils/render.js";
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
+const Delete = `Deleting...`;
+
+const POINTER_VENTS = {
+  NONE: `none`,
+  AUTO: `auto`
+};
+
+const ELEMEMTS = {
+  BUTTON: `BUTTON`,
+  LI_ELEM: `li`
+};
+
+const EVT_KEY = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
+};
 
 const Mode = {
   CLOSE: `close`,
@@ -15,9 +32,9 @@ const ENTER_KEY_KODE = 13;
 
 const parseFormData = ({text, emoji}) => {
   return {
-    comment: text.value,
-    emotion: emoji !== null ? emoji.value : ``,
-    date: new Date()
+    "comment": text.value,
+    "emotion": emoji !== null ? emoji.value : ``,
+    "date": new Date()
   };
 };
 
@@ -31,15 +48,12 @@ export default class MovieController {
     this._controlsComponent = null;
     this._film = null;
     this._filmId = null;
-    this._deleteCommentId = null;
-    this._createdCommentId = null;
+    this._comments = null;
+    this.shakedElelment = null;
     this._mode = Mode.CLOSE;
 
     this._onViewChange = onViewChange;
     this._onDataChange = onDataChange;
-    this._commentsModel = new CommentsModel();
-    this._commentsModel.setDataDeleteHandler(this._deleteComment.bind(this));
-    this._commentsModel.setDataCreateHandler(this._createComment.bind(this));
     this._setComments = this._setComments.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -95,12 +109,25 @@ export default class MovieController {
       this._onCloseDetailClick();
     });
 
-    this._filmDetailsComponent.setFormSumbmitHandler(() => {
-      if (event.ctrlKey && event.keyCode === ENTER_KEY_KODE) {
+    this._filmDetailsComponent.setFormSumbmitHandler((evt) => {
+      if (evt.ctrlKey && evt.keyCode === ENTER_KEY_KODE) {
+        evt.currentTarget.style.pointerEvents = POINTER_VENTS.NONE;
         const data = this._filmDetailsComponent.getData();
         const parseData = parseFormData(data);
-        this._createdCommentId = data.id;
-        this._commentsModel.createNewComment(parseData);
+        const form = evt.currentTarget;
+        this._api.createComments(this._filmId, parseData)
+          .then(({movie, comments}) => {
+            this._film = movie;
+            form.style.pointerEvents = POINTER_VENTS.AUTO;
+            this._setComments(comments);
+          }).catch(() => {
+            this.shakedElelment = form;
+            form.style.pointerEvents = POINTER_VENTS.AUTO;
+            this.shake();
+            this._commentsComponent.setData({
+              error: true,
+            });
+          });
       }
     });
 
@@ -158,52 +185,58 @@ export default class MovieController {
   }
 
   _setComments(comments) {
+    this._comments = comments;
     const commentsContainer = this._filmDetailsComponent.getElement().querySelector(`.form-details__bottom-container`);
+
+    const oldCommentsComponent = this._commentsComponent;
 
     this._commentsComponent = new CommentsComponent(comments);
     this._commentsComponent.setDeleteComment((evt) => {
       evt.preventDefault();
-      const target = evt.target.dataset.id;
-      this._deleteCommentId = target;
-      this._commentsModel.deleteById(target);
+
+      if (evt.target.tagName === ELEMEMTS.BUTTON) {
+        const target = evt.target.closest(ELEMEMTS.LI_ELEM).dataset.id;
+        this.shakedElelment = evt.target.closest(ELEMEMTS.LI_ELEM);
+        evt.target.innerText = Delete;
+
+        this._api.deleteComment(target).then(() => {
+          const index = this._comments.findIndex((it) => it.id === target);
+          if (index !== -1) {
+            const newComments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
+            this._film.comments = newComments;
+            this._setComments(newComments);
+          }
+        }).catch(() => {
+          this.shake();
+          this._commentsComponent.rerender();
+        });
+      }
     });
 
-    render(commentsContainer, this._commentsComponent);
-  }
-
-  _deleteComment() {
-    const index = this._film.comments.findIndex((it) => it === this._deleteCommentId);
-
-    if (index !== -1) {
-      const newComments = [].concat(this._film.comments.slice(0, index), this._film.comments.slice(index + 1));
-
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        comments: newComments,
-      }));
-      remove(this._commentsComponent);
-      this._commentsModel.getCommentsById(newComments, this._setComments);
+    if (oldCommentsComponent) {
+      replace(this._commentsComponent, oldCommentsComponent);
+    } else {
+      render(commentsContainer, this._commentsComponent);
     }
   }
 
-  _createComment() {
-    const newComments = [].concat(this._createdCommentId, this._film.comments);
-    this._onDataChange(this, this._film, Object.assign({}, this._film, {
-      comments: newComments,
-    }));
-    remove(this._commentsComponent);
-    this._commentsModel.getCommentsById(newComments, this._setComments);
+  shake() {
+    this.shakedElelment.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this.shakedElelment.style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _onCloseDetailClick() {
     this._mode = Mode.CLOSE;
     this._commentsComponent.reset();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    remove(this._commentsComponent);
     remove(this._filmDetailsComponent);
   }
 
   _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    const isEscKey = evt.key === EVT_KEY.ESCAPE || evt.key === EVT_KEY.ESC;
 
     if (isEscKey) {
       this._onCloseDetailClick();

@@ -8,8 +8,13 @@ const Method = {
   DELETE: `DELETE`
 };
 
+const STATUS = {
+  MULTIPLE_CHOICE: 300,
+  SUCCESS: 200
+};
+
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= STATUS.SUCCESS && response.status < STATUS.MULTIPLE_CHOICE) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
@@ -35,6 +40,26 @@ const API = class {
     .then((response) => response.json())
     .then(Comments.parseComments)
     .then(callback);
+  }
+
+  createComments(filmId, data) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then(({movie, comments}) => {
+        return {
+          movie: Movie.parseFilm(movie),
+          comments: Comments.parseComments(comments)
+        };
+      });
+  }
+
+  deleteComment(id) {
+    return this._load({url: `comments/${id}`, method: Method.DELETE});
   }
 
   updateFilms(id, data) {

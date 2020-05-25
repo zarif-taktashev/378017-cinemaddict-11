@@ -1,6 +1,3 @@
-import {comments} from "../mock/films";
-
-let commentsArray = comments.slice();
 
 export default class Comments {
   constructor(data) {
@@ -22,33 +19,6 @@ export default class Comments {
 
   static parseComments(data) {
     return data.map(Comments.parseComment);
-  }
-
-  deleteById(id) {
-    const index = commentsArray.findIndex((it) => it.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    commentsArray = [].concat(commentsArray.slice(0, index), commentsArray.slice(index + 1));
-
-    this._callHandlers(this._dataDeleteHandlers);
-
-    return true;
-  }
-
-  createNewComment(comment) {
-    commentsArray = [].concat(comment, commentsArray);
-    this._callHandlers(this._dataCreateHandlers);
-  }
-
-  setDataDeleteHandler(handler) {
-    this._dataDeleteHandlers.push(handler);
-  }
-
-  setDataCreateHandler(handler) {
-    this._dataCreateHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
