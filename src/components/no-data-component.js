@@ -6,7 +6,7 @@ const createFilm = () => {
   );
 };
 
-export default class NoData extends AbstractComponent {
+export default class NoDataComponent extends AbstractComponent {
   getTemplate() {
     return createFilm();
   }

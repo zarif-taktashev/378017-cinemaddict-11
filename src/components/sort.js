@@ -6,6 +6,8 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
+const ANKOR = `A`;
+
 const createSort = (currenSortType) => {
   return (
     `<ul class="sort">
@@ -39,11 +41,17 @@ export default class Sort extends AbstractSmartComponent {
     return this._currenSortType;
   }
 
+  hide() {
+    this._currenSortType = SortType.DEFAULT;
+    this.rerender();
+    super.hide();
+  }
+
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
-      if (evt.target.tagName !== `A`) {
+      if (evt.target.tagName !== ANKOR) {
         return;
       }
 

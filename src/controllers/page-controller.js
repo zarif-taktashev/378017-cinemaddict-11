@@ -21,7 +21,7 @@ const getSortedTasks = (films, sortType, from, to) => {
 
   switch (sortType) {
     case SortType.DATE:
-      sortedTasks = showingFilms.sort((a, b) => a.date - b.date);
+      sortedTasks = showingFilms.sort((a, b) => b.date - a.date);
       break;
     case SortType.RATE:
       sortedTasks = showingFilms.sort((a, b) => b.range - a.range);
@@ -58,6 +58,16 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
+  hide() {
+    this._container.hide();
+    this._sortComponent.hide();
+  }
+
+  show() {
+    this._container.show();
+    this._sortComponent.show();
+  }
+
   render() {
     const films = this._filmsModel.getFilms();
     if (films.length !== 0) {
@@ -91,10 +101,11 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    this._api.updateFilms(oldData.id, newData).then((newFilm) => {
+    this._api.updateFilms(oldData.id, newData)
+    .then((newFilm) => {
       const isSuccess = this._filmsModel.updateFilm(oldData.id, newFilm);
       if (isSuccess) {
-        movieController.updateData(newData);
+        movieController.updateData(newFilm);
       }
     });
   }

@@ -1,6 +1,6 @@
-import MenuComponent from "../components/menu";
-import {render, replace, remove} from "../utils/render";
-import {getTasksByFilter, FilterType} from "../utils/filter.js";
+import FiltersComponent from "../components/filters";
+import {render, replace, remove, RenderPosition} from "../utils/render";
+import {getTasksByFilter, FilterType} from "../utils/filter";
 
 export default class FilterController {
   constructor(container, model) {
@@ -29,13 +29,13 @@ export default class FilterController {
     });
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new MenuComponent(filters);
+    this._filterComponent = new FiltersComponent(filters);
     this._filterComponent.setFilterClickHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent);
+      render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
   }
 

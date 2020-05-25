@@ -5,6 +5,10 @@ const IMG_HEIGHT = 55;
 const IMG_WIDTH = 55;
 const IMG_NODE = `IMG`;
 
+const DefaultData = {
+  error: false,
+};
+
 const createCommentList = (commentsInf) => {
   return commentsInf.map((comment) => {
     const year = comment.date.getFullYear();
@@ -14,8 +18,8 @@ const createCommentList = (commentsInf) => {
     const minutes = comment.date.getMinutes() + 1;
     const text = encode(comment.text);
 
-    return (`
-      <li class="film-details__comment">
+    return (
+      `<li data-id="${comment.id}" class="film-details__comment">
         <span class="film-details__comment-emoji">
         ${comment.emotion ? `<img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="${comment.emotion}">` : ``}
         </span>
@@ -24,16 +28,15 @@ const createCommentList = (commentsInf) => {
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comment.author}</span>
             <span class="film-details__comment-day">${year}/${month}/${day} ${hour}:${minutes}</span>
-            <button data-id="${comment.id}" class="film-details__comment-delete">Delete</button>
+            <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
-      </li>
-    `);
+      </li>`);
   }).join(`\n`);
 };
 
 const createComments = (comments, options = {}) => {
-  const {emoji, emojiId, commentText} = options;
+  const {emoji, emojiId, commentText, externalData} = options;
   const commentsQuantity = comments.length;
 
   const commentsMarkup = createCommentList(comments);
@@ -52,7 +55,7 @@ const createComments = (comments, options = {}) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText ? commentText : ``}</textarea>
+          <textarea class="${externalData.error ? `film-details__comment-input-error` : ``}  film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText ? commentText : ``}</textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -81,7 +84,7 @@ const createComments = (comments, options = {}) => {
   `);
 };
 
-export default class Commets extends AbstractSmartComponent {
+export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
     this._comments = comments;
@@ -89,6 +92,7 @@ export default class Commets extends AbstractSmartComponent {
     this._emoji = null;
     this._emojiId = null;
     this._commentText = null;
+    this._externalData = DefaultData;
     this._setEmojiClick();
   }
 
@@ -105,6 +109,7 @@ export default class Commets extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.setDeleteComment(this._deleteButtonClickHandler);
     this._setEmojiClick();
   }
 
@@ -113,7 +118,13 @@ export default class Commets extends AbstractSmartComponent {
       emoji: this._emoji,
       emojiId: this._emojiId,
       commentText: this._commentText,
+      externalData: this._externalData,
     });
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
   }
 
   _setEmojiClick() {
@@ -140,5 +151,7 @@ export default class Commets extends AbstractSmartComponent {
     const element = this.getElement();
     element.querySelector(`.film-details__comments-list`)
     .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
   }
 }
