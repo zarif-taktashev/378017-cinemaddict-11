@@ -11,7 +11,7 @@ const createFilters = (filtersInf) => {
     return (`
       <a href="#filter__${it.name}" id="filter__${it.name}" class="main-navigation__item ${it.checked ? `main-navigation__item--active` : ``}">
         ${it.name}
-        ${it.count <= 5 && it.name !== `All` ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
+        ${it.name !== `All` ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
       </a>
     `);
   }).join(`\n`);

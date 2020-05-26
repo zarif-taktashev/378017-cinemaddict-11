@@ -2,9 +2,10 @@ import AbstractSmartComponent from "./abstract-smart-component.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {getClientRate} from "../utils/filter";
+import {HOUR} from "../utils/render";
+
 
 const BAR_HEIGHT = 50;
-const HOUR = 60;
 
 const TIME_GAPS = {
   "today": {
@@ -31,7 +32,7 @@ const TIME_GAPS = {
 
 const getWatchedFilms = (films, from, to) => {
   return films.filter((item) => {
-    return item.isHistory === true &&
+    return item.isHistory &&
     item.watchingDate >= from &&
     item.watchingDate <= to;
   });

@@ -42,11 +42,11 @@ const API = class {
     .then(callback);
   }
 
-  createComments(filmId, data) {
+  createComments(filmId, comment) {
     return this._load({
       url: `comments/${filmId}`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(comment),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
@@ -62,11 +62,11 @@ const API = class {
     return this._load({url: `comments/${id}`, method: Method.DELETE});
   }
 
-  updateFilms(id, data) {
+  updateFilms(id, film) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(film.toRAW()),
       headers: new Headers({"Content-Type": `application/json`})
     })
     .then((response) => response.json())

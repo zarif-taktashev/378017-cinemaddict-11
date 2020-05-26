@@ -27,13 +27,13 @@ export default class DetailsControl extends AbstractComponent {
   }
 
   setWatchListClickHandler(handler) {
-    const watchlist = this.getElement().querySelector(`.film-details__control-label--watchlist`);
-    watchlist.addEventListener(`click`, handler);
+    const watchlistElement = this.getElement().querySelector(`.film-details__control-label--watchlist`);
+    watchlistElement.addEventListener(`click`, handler);
   }
 
   setHistoryClickHandler(handler) {
-    const watched = this.getElement().querySelector(`.film-details__control-label--watched`);
-    watched.addEventListener(`click`, handler);
+    const watchedElement = this.getElement().querySelector(`.film-details__control-label--watched`);
+    watchedElement.addEventListener(`click`, handler);
   }
 
   setFavoriteClickHandler(handler) {

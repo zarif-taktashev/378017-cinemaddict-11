@@ -1,6 +1,5 @@
 import AbstractComponent from "./abstract-component";
-
-const HOUR = 60;
+import {HOUR} from "../utils/render";
 
 const MONTH_NAMES = [
   `January`,
@@ -31,8 +30,8 @@ const createFilmDetails = (film) => {
   const description = film.description;
   const filmYear = film.date.getFullYear();
   const filmMonth = film.date.getUTCMonth();
-  const fiilDay = film.date.getDate();
-  const fiilDate = `${fiilDay} ${MONTH_NAMES[filmMonth]} ${filmYear}`;
+  const filmDay = film.date.getDate();
+  const filmDate = `${filmDay} ${MONTH_NAMES[filmMonth]} ${filmYear}`;
 
   const genresMarkup = createGenresList(film.genres);
 
@@ -84,7 +83,7 @@ const createFilmDetails = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${fiilDate}</td>
+                  <td class="film-details__cell">${filmDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -128,8 +127,8 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   setCloseDetailClick(handler) {
-    const filmClose = this.getElement().querySelector(`.film-details__close-btn`);
-    filmClose.addEventListener(`click`, handler);
+    const filmCloseElement = this.getElement().querySelector(`.film-details__close-btn`);
+    filmCloseElement.addEventListener(`click`, handler);
 
     this.closeHandler = handler;
   }
@@ -142,8 +141,8 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   setFormSumbmitHandler(handler) {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    form.addEventListener(`keydown`, handler);
+    const formElement = this.getElement().querySelector(`.film-details__inner`);
+    formElement.addEventListener(`keydown`, handler);
   }
 
   setEsckeydown(handler) {

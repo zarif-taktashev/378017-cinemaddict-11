@@ -15,9 +15,9 @@ import API from "./api.js";
 const AUTHORIZATION = `Basic 23123`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
-const header = document.querySelector(`.header`);
+const headerElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
-const footer = document.querySelector(`.footer`);
+const footerElement = document.querySelector(`.footer`);
 
 const api = new API(END_POINT, AUTHORIZATION);
 const filmsData = new MoviesModel();
@@ -31,20 +31,20 @@ const filmList = new FilmListComponent();
 const load = new LoadingComponent();
 const footerComp = new FooterComponent();
 
-render(header, user);
+render(headerElement, user);
 render(siteMainElement, menu);
 filters.render();
 render(siteMainElement, sort);
 render(siteMainElement, film);
 render(film.getElement(), filmList);
 render(filmList.getElement(), load);
-render(footer, footerComp);
+render(footerElement, footerComp);
 
 api.getFilms()
   .then((films) => {
     filmsData.setFilms(films);
 
-    replace(new UserComponent(films.length), user);
+    replace(new UserComponent(filmsData.getWatchedFilms), user);
     remove(load);
     replace(new FooterComponent(films.length), footerComp);
 

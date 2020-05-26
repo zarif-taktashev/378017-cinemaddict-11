@@ -2,6 +2,7 @@ import FilmCardComponent from "../components/film-card";
 import FilmDetailsComponent from "../components/film-details";
 import CommentsComponent from "../components/comments";
 import ControlsComponent from "../components/details-controls";
+import CardControlsComponent from "../components/card-controls";
 import MoviesModel from "../models/movies";
 import {render, replace, remove} from "../utils/render.js";
 
@@ -46,6 +47,7 @@ export default class MovieController {
     this._filmDetailsComponent = null;
     this._commentsComponent = null;
     this._controlsComponent = null;
+    this._cardControlsComponent = null;
     this._film = null;
     this._filmId = null;
     this._comments = null;
@@ -62,6 +64,32 @@ export default class MovieController {
     if (this._mode !== Mode.CLOSE) {
       this._onCloseDetailClick();
     }
+  }
+
+  setCardControls(film) {
+    this._cardControlsComponent = new CardControlsComponent(film);
+    this._cardControlsComponent.setWatchListClickHandler((evt) => {
+      evt.preventDefault();
+      const newFilm = MoviesModel.clone(this._film);
+      newFilm.isWatchlist = !newFilm.isWatchlist;
+      this._onDataChange(this, this._film, newFilm);
+    });
+
+    this._cardControlsComponent.setHistoryClickHandler((evt) => {
+      evt.preventDefault();
+      const newFilm = MoviesModel.clone(this._film);
+      newFilm.isHistory = !newFilm.isHistory;
+      this._onDataChange(this, this._film, newFilm);
+    });
+
+    this._cardControlsComponent.setFavoriteClickHandler((evt) => {
+      evt.preventDefault();
+      const newFilm = MoviesModel.clone(this._film);
+      newFilm.isFavorite = !newFilm.isFavorite;
+      this._onDataChange(this, this._film, newFilm);
+    });
+
+    render(this._filmCardComponent.getElement(), this._cardControlsComponent);
   }
 
   render(film) {
@@ -83,26 +111,7 @@ export default class MovieController {
       this._onCardClick();
     });
 
-    this._filmCardComponent.setWatchListClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = MoviesModel.clone(this._film);
-      newFilm.isWatchlist = !newFilm.isWatchlist;
-      this._onDataChange(this, this._film, newFilm);
-    });
-
-    this._filmCardComponent.setHistoryClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = MoviesModel.clone(this._film);
-      newFilm.isHistory = !newFilm.isHistory;
-      this._onDataChange(this, this._film, newFilm);
-    });
-
-    this._filmCardComponent.setFavoriteClickHandler((evt) => {
-      evt.preventDefault();
-      const newFilm = MoviesModel.clone(this._film);
-      newFilm.isFavorite = !newFilm.isFavorite;
-      this._onDataChange(this, this._film, newFilm);
-    });
+    this.setCardControls(this._film);
 
     this._filmDetailsComponent.setCloseDetailClick((evt) => {
       evt.preventDefault();
@@ -112,8 +121,8 @@ export default class MovieController {
     this._filmDetailsComponent.setFormSumbmitHandler((evt) => {
       if (evt.ctrlKey && evt.keyCode === ENTER_KEY_KODE) {
         evt.currentTarget.style.pointerEvents = POINTER_VENTS.NONE;
-        const data = this._filmDetailsComponent.getData();
-        const parseData = parseFormData(data);
+        const createdComment = this._filmDetailsComponent.getData();
+        const parseData = parseFormData(createdComment);
         const form = evt.currentTarget;
         this._api.createComments(this._filmId, parseData)
           .then(({movie, comments}) => {
@@ -158,6 +167,8 @@ export default class MovieController {
       newFilm.isFavorite = !newFilm.isFavorite;
       this._onDataChange(this, this._film, newFilm);
     });
+
+    this.setCardControls(film);
 
     const controlControls = this._filmDetailsComponent.getElement().querySelector(`.form-details__top-container`);
 

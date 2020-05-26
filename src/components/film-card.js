@@ -1,6 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-
-const HOUR = 60;
+import {HOUR} from "../utils/render";
 
 const createFilmCard = (film) => {
   const {name, range, date, duration, genres, poster, description} = film;
@@ -25,11 +24,6 @@ const createFilmCard = (film) => {
       <img src="./${poster}" alt="${alt}" class="film-card__poster">
       <p class="film-card__description">${descriptionVal}</p>
       <a class="film-card__comments">${film.comments.length} comments</a>
-      <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite film-card__controls-item--active">Mark as favorite</button>
-      </form>
     </article>`
   );
 };
@@ -56,21 +50,6 @@ export default class FilmCard extends AbstractComponent {
 
   setCommentsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__comments`)
-      .addEventListener(`click`, handler);
-  }
-
-  setWatchListClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, handler);
-  }
-
-  setHistoryClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, handler);
-  }
-
-  setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, handler);
   }
 }

@@ -1,27 +1,22 @@
 
 export default class Comments {
-  constructor(data) {
-    this._dataDeleteHandlers = [];
-    this._dataCreateHandlers = [];
+  constructor(comment) {
 
-    if (data) {
-      this.id = data[`id`];
-      this.author = data[`author`] || ``;
-      this.text = data[`comment`] || ``;
-      this.date = data[`date`] ? new Date(data[`date`]) : data[`date`];
-      this.emotion = data[`emotion`] || ``;
+    if (comment) {
+      this.id = comment[`id`];
+      this.author = comment[`author`] || ``;
+      this.text = comment[`comment`] || ``;
+      this.date = comment[`date`] ? new Date(comment[`date`]) : comment[`date`];
+      this.emotion = comment[`emotion`] || ``;
     }
   }
 
-  static parseComment(data) {
-    return new Comments(data);
+  static parseComment(comment) {
+    return new Comments(comment);
   }
 
-  static parseComments(data) {
-    return data.map(Comments.parseComment);
+  static parseComments(comments) {
+    return comments.map(Comments.parseComment);
   }
 
-  _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
-  }
 }

@@ -19,9 +19,9 @@ export const getClientRate = (film) => {
     return `fan`;
   } else if (film >= RATING.START && film <= RATING.NOVICE) {
     return `novice`;
-  } else {
-    return ``;
   }
+
+  return ``;
 };
 
 export const getIsWatchlist = (films) => {

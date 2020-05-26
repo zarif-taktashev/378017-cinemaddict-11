@@ -1,11 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-
-export const MenuItem = {
-  STATISTICS: `control__statistic`,
-  FILMS: `control__task`,
-};
-
-const ANKOR = `A`;
+import {ANKOR} from "../utils/render";
 
 const createMenu = () => {
   return (

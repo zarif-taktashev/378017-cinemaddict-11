@@ -1,37 +1,33 @@
 import {getTasksByFilter, FilterType} from "../utils/filter.js";
 
 export default class Movies {
-  constructor(data) {
+  constructor(movie) {
     this._activeFilterType = FilterType.ALL;
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._films = [];
 
-    if (data) {
-      this.id = data[`id`];
-      this.comments = data[`comments`] || [];
-      this.name = data[`film_info`][`title`] || ``;
-      this.alternativeName = data[`film_info`][`alternative_title`] || ``;
-      this.range = data[`film_info`][`total_rating`] || ``;
-      this.poster = data[`film_info`][`poster`] || ``;
-      this.ageRate = data[`film_info`][`age_rating`] || ``;
-      this.director = data[`film_info`][`director`] || ``;
-      this.writers = data[`film_info`][`writers`] || [];
-      this.actors = data[`film_info`][`actors`] || [];
-      this.date = data[`film_info`][`release`][`date`] ? new Date(data[`film_info`][`release`][`date`]) : null;
-      this.countries = data[`film_info`][`release`][`release_country`] ? data[`film_info`][`release`][`release_country`] : ``;
-      this.duration = data[`film_info`][`runtime`] || ``;
-      this.genres = data[`film_info`][`genre`] || [];
-      this.description = data[`film_info`][`description`] || ``;
-      this.watchingDate = data[`user_details`][`watching_date`] ? new Date(data[`user_details`][`watching_date`]) : null;
-      this.isHistory = data[`user_details`][`already_watched`] || false;
-      this.isWatchlist = data[`user_details`][`watchlist`] || false;
-      this.isFavorite = data[`user_details`][`favorite`] || false;
+    if (movie) {
+      this.id = movie[`id`];
+      this.comments = movie[`comments`] || [];
+      this.name = movie[`film_info`][`title`] || ``;
+      this.alternativeName = movie[`film_info`][`alternative_title`] || ``;
+      this.range = movie[`film_info`][`total_rating`] || ``;
+      this.poster = movie[`film_info`][`poster`] || ``;
+      this.ageRate = movie[`film_info`][`age_rating`] || ``;
+      this.director = movie[`film_info`][`director`] || ``;
+      this.writers = movie[`film_info`][`writers`] || [];
+      this.actors = movie[`film_info`][`actors`] || [];
+      this.date = movie[`film_info`][`release`][`date`] ? new Date(movie[`film_info`][`release`][`date`]) : null;
+      this.countries = movie[`film_info`][`release`][`release_country`] ? movie[`film_info`][`release`][`release_country`] : ``;
+      this.duration = movie[`film_info`][`runtime`] || ``;
+      this.genres = movie[`film_info`][`genre`] || [];
+      this.description = movie[`film_info`][`description`] || ``;
+      this.watchingDate = movie[`user_details`][`watching_date`] ? new Date(movie[`user_details`][`watching_date`]) : null;
+      this.isHistory = movie[`user_details`][`already_watched`] || false;
+      this.isWatchlist = movie[`user_details`][`watchlist`] || false;
+      this.isFavorite = movie[`user_details`][`favorite`] || false;
     }
-  }
-
-  static clone(data) {
-    return new Movies(data.toRAW());
   }
 
   toRAW() {
@@ -64,14 +60,6 @@ export default class Movies {
     };
   }
 
-  static parseFilm(data) {
-    return new Movies(data);
-  }
-
-  static parseFilms(data) {
-    return data.map(Movies.parseFilm);
-  }
-
   getFilms() {
     return getTasksByFilter(this._films, this._activeFilterType);
   }
@@ -83,6 +71,12 @@ export default class Movies {
   setFilms(films) {
     this._films = films;
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  getWatchedFilms() {
+    return this._films.filter((item) => {
+      return item.isHistory;
+    });
   }
 
   updateFilm(id, film) {
@@ -114,5 +108,17 @@ export default class Movies {
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
+  }
+
+  static parseFilm(movie) {
+    return new Movies(movie);
+  }
+
+  static parseFilms(movies) {
+    return movies.map(Movies.parseFilm);
+  }
+
+  static clone(movie) {
+    return new Movies(movie.toRAW());
   }
 }

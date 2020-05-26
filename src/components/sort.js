@@ -1,12 +1,11 @@
 import AbstractSmartComponent from "./abstract-smart-component";
+import {ANKOR} from "../utils/render";
 
 export const SortType = {
   RATE: `rate`,
   DATE: `date-up`,
   DEFAULT: `default`,
 };
-
-const ANKOR = `A`;
 
 const createSort = (currenSortType) => {
   return (

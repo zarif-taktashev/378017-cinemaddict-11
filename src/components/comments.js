@@ -36,7 +36,7 @@ const createCommentList = (commentsInf) => {
 };
 
 const createComments = (comments, options = {}) => {
-  const {emoji, emojiId, commentText, externalData} = options;
+  const {emoji, emojiId, externalData} = options;
   const commentsQuantity = comments.length;
 
   const commentsMarkup = createCommentList(comments);
@@ -55,7 +55,7 @@ const createComments = (comments, options = {}) => {
         </div>
 
         <label class="film-details__comment-label">
-          <textarea class="${externalData.error ? `film-details__comment-input-error` : ``}  film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentText ? commentText : ``}</textarea>
+          <textarea class="${externalData.error ? `film-details__comment-input-error` : ``}  film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
         </label>
 
         <div class="film-details__emoji-list">
@@ -111,6 +111,7 @@ export default class Comments extends AbstractSmartComponent {
   recoveryListeners() {
     this.setDeleteComment(this._deleteButtonClickHandler);
     this._setEmojiClick();
+    this.getElement().querySelector(`.film-details__comment-input`).value = this._commentText;
   }
 
   getTemplate() {
@@ -122,8 +123,9 @@ export default class Comments extends AbstractSmartComponent {
     });
   }
 
-  setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
+  setData(error) {
+    this._externalData = Object.assign({}, DefaultData, error);
+    this._commentText = this.getElement().querySelector(`.film-details__comment-input`).value;
     this.rerender();
   }
 
@@ -137,8 +139,8 @@ export default class Comments extends AbstractSmartComponent {
         const src = evt.target.attributes.src.value;
         const alt = evt.target.alt;
         const emojiId = evt.target.parentNode.attributes.for.value;
-        this._commentText = element.querySelector(`.film-details__comment-input`).value;
         const img = `<img src=${src} alt=${alt} width=${IMG_WIDTH} height=${IMG_HEIGHT}>`;
+        this._commentText = this.getElement().querySelector(`.film-details__comment-input`).value;
         this._emoji = img;
         this._emojiId = emojiId;
 

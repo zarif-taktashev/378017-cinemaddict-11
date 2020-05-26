@@ -5,6 +5,9 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
+export const ANKOR = `A`;
+export const HOUR = 60;
+
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
