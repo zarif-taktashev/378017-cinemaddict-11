@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {HOUR} from "../utils/render";
 
 const createFilmCard = (film) => {
@@ -28,27 +28,49 @@ const createFilmCard = (film) => {
   );
 };
 
-export default class FilmCard extends AbstractComponent {
+export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+
+    this._posterHandler = null;
+    this._titleHandler = null;
+    this._commentsHandler = null;
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setPosterClickHandler(this._posterHandler);
+    this.setTitleClickHandler(this._titleHandler);
+    this.setCommentsClickHandler(this._commentsHandler);
   }
 
   getTemplate() {
     return createFilmCard(this._film);
   }
 
+  setData(film) {
+    this._film = Object.assign({}, this._film, film);
+    this.rerender();
+  }
+
   setPosterClickHandler(handler) {
+    this._posterHandler = handler;
     this.getElement().querySelector(`.film-card__poster`)
       .addEventListener(`click`, handler);
   }
 
   setTitleClickHandler(handler) {
+    this._titleHandler = handler;
     this.getElement().querySelector(`.film-card__title`)
       .addEventListener(`click`, handler);
   }
 
   setCommentsClickHandler(handler) {
+    this._commentsHandler = handler;
     this.getElement().querySelector(`.film-card__comments`)
       .addEventListener(`click`, handler);
   }

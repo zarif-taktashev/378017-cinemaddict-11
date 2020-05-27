@@ -129,6 +129,7 @@ export default class MovieController {
             this._film = movie;
             form.style.pointerEvents = POINTER_VENTS.AUTO;
             this._setComments(comments);
+            this._filmCardComponent.setData(movie);
           }).catch(() => {
             this.shakedElelment = form;
             form.style.pointerEvents = POINTER_VENTS.AUTO;

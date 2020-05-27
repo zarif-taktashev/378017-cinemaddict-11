@@ -123,8 +123,8 @@ export default class Comments extends AbstractSmartComponent {
     });
   }
 
-  setData(error) {
-    this._externalData = Object.assign({}, DefaultData, error);
+  setData(redBorder) {
+    this._externalData = Object.assign({}, DefaultData, redBorder);
     this._commentText = this.getElement().querySelector(`.film-details__comment-input`).value;
     this.rerender();
   }
