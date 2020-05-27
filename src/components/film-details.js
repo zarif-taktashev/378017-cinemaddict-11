@@ -1,6 +1,8 @@
 import AbstractComponent from "./abstract-component";
 import {HOUR} from "../utils/render";
 
+const GenresLength = 1;
+
 const MONTH_NAMES = [
   `January`,
   `February`,
@@ -94,7 +96,7 @@ const createFilmDetails = (film) => {
                   <td class="film-details__cell">${film.countries}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${film.genres.length > 1 ? `Genres` : `Genre`}</td>
+                  <td class="film-details__term">${film.genres.length > GenresLength ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${genresMarkup}
                 </tr>

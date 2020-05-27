@@ -1,6 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 const FILTER_ID_PREFIX = `filter__`;
+const ALL = `All`;
 
 const getFilterNameById = (id) => {
   return id.substring(FILTER_ID_PREFIX.length);
@@ -11,7 +12,7 @@ const createFilters = (filtersInf) => {
     return (`
       <a href="#filter__${it.name}" id="filter__${it.name}" class="main-navigation__item ${it.checked ? `main-navigation__item--active` : ``}">
         ${it.name}
-        ${it.name !== `All` ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
+        ${it.name !== ALL ? `<span class="main-navigation__item-count">${it.count}</span>` : ``}
       </a>
     `);
   }).join(`\n`);
