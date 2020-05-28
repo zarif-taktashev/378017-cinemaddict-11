@@ -44,7 +44,7 @@ api.getFilms()
   .then((films) => {
     filmsData.setFilms(films);
 
-    replace(new UserComponent(filmsData.getWatchedFilms), user);
+    replace(new UserComponent(filmsData.getWatchedFilms().length), user);
     remove(load);
     replace(new FooterComponent(films.length), footerComp);
 
