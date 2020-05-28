@@ -217,6 +217,7 @@ export default class MovieController {
             const newComments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
             this._film.comments = newComments;
             this._setComments(newComments);
+            this._filmCardComponent.setData(this._film);
           }
         }).catch(() => {
           this.shake();
