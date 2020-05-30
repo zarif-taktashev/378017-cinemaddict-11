@@ -44,7 +44,14 @@ api.getFilms()
   .then((films) => {
     filmsData.setFilms(films);
 
-    replace(new UserComponent(filmsData.getWatchedFilms().length), user);
+    let newUser = new UserComponent(filmsData.getWatchedFilms().length);
+    replace(newUser, user);
+    filmsData.setDataChangeHandler(() => {
+      let oldUser = newUser;
+      newUser = new UserComponent(filmsData.getWatchedFilms().length);
+      replace(newUser, oldUser);
+    });
+
     remove(load);
     replace(new FooterComponent(films.length), footerComp);
 
