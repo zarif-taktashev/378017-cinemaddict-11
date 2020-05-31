@@ -1,9 +1,8 @@
 import ShowButtonComponent from "../components/show-button";
 import NoDataComponent from "../components/no-data-component";
 import {SortType} from "../components/sort";
-import UserComponent from "../components/user-name";
 import MovieController from "./movie-controller";
-import {render, remove, replace} from "../utils/render";
+import {render, remove} from "../utils/render";
 
 const FILM_COUNT_ON_START = 5;
 const SHOWING_FILM_COUNT_BY_BUTTON = 5;
